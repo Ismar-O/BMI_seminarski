@@ -1,4 +1,3 @@
-
     % Read the image
     img = imread('img/studenti.jpg');
     
@@ -52,7 +51,7 @@
     [Br, Lr] = bwboundaries(redMask, 'noholes');
     [Bg, Lg] = bwboundaries(greenMask, 'noholes');
      
-     subplot(1,2,1), imshow(greenMask | redMask);  
+    % subplot(1,2,1), imshow(greenMask | redMask);  
 
     xlabel('MASK 1');
     minAreaThreshold = 3000; % Define your minimum area threshold here (adjust as necessary)
@@ -63,19 +62,22 @@
     line([1, size(img, 2)], [lineHeight, lineHeight], 'Color', 'r', 'LineWidth', 2);
     
     hold off
+    
+    subplot(1,1,1)
+    imshow(img);
     fprintf('AAAAAAA, %f', size(img,1)/2);
     RsquareCount = Funkcija_brojanje(Br, minAreaThreshold, 'red', lineHeight);
     GsquareCount = Funkcija_brojanje(Bg, minAreaThreshold, 'green', lineHeight);
 
 
 
-    subplot(1,2,2)
+    
     % Display the result
     fprintf('\nNumber of red squares: %d\n', RsquareCount);
     fprintf('\nNumber of red squares: %d\n', GsquareCount);
     
     % Optionally, display the image with detected squares
-    imshow(img);
+    
     xlabel(sprintf('Broj crvenih: %d\nBroj zelenih: %d', RsquareCount, GsquareCount), 'FontSize', 40);
     hold on;
 

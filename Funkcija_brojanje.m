@@ -27,9 +27,6 @@ for k = 1:length(B)
        end;
     end
     
-    fprintf('TAMPAREA %f ', tempArea);
-    
-   
         aspectRatio = height / width;  % or width / height depending on your preference
         if perimeter>0
         % Check for minimum area and aspect ratio
@@ -43,10 +40,11 @@ for k = 1:length(B)
                     % Place the label near the boundary
                     label = sprintf('%d', squareCount);
                     text(centroidX, centroidY, label, 'Color', color, 'FontSize', 20, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
+                    continue;
                 end
             end
+        
         end
-  
 end
 
 output = squareCount;

@@ -1,1 +1,4 @@
 /misc
+*.aux
+*.log
+*.toc
