@@ -29,7 +29,10 @@
     redMask = mask1 | mask2;
     greenMask = mask3;
     
-   
+
+  
+    
+  
   % Perform morphological operations to clean up the mask
   
 
@@ -44,14 +47,15 @@
      greenMask = imdilate(greenMask, strel('disk', 10));
      
  
-  
+
+    
     % Find contours of the red areas
     
     
     [Br, Lr] = bwboundaries(redMask, 'noholes');
     [Bg, Lg] = bwboundaries(greenMask, 'noholes');
      
-    % subplot(1,2,1), imshow(greenMask | redMask);  
+   
 
     xlabel('MASK 1');
     minAreaThreshold = 3000; % Define your minimum area threshold here (adjust as necessary)
@@ -64,10 +68,10 @@
     hold off
     
     subplot(1,1,1)
-    imshow(img);
-    fprintf('AAAAAAA, %f', size(img,1)/2);
-    RsquareCount = Funkcija_brojanje(Br, minAreaThreshold, 'red', lineHeight);
-    GsquareCount = Funkcija_brojanje(Bg, minAreaThreshold, 'green', lineHeight);
+    imshow(redMask | greenMask,  'InitialMagnification', 40);
+
+    RsquareCount = Funkcija_brojanje(Br,minAreaThreshold,'red',lineHeight);
+    GsquareCount = Funkcija_brojanje(Bg,minAreaThreshold,'green',lineHeight);
 
 
 
@@ -84,12 +88,12 @@
     
 for i = 1:length(Br)
     boundary = Br{i};
-    plot(boundary(:,2), boundary(:,1), 'Color', 'blue', 'LineWidth', 4);
+    plot(boundary(:,2), boundary(:,1), 'Color', 'blue', 'LineWidth', 2);
 end
 
 for i = 1:length(Bg)
     boundary = Bg{i};
-    plot(boundary(:,2), boundary(:,1), 'Color', 'yellow', 'LineWidth', 4);
+    plot(boundary(:,2), boundary(:,1), 'Color', 'yellow', 'LineWidth', 2);
 end
 
 

@@ -1,31 +1,30 @@
 function output = Funkcija_brojanje( B, minArea, color, Yheight )
 squareCount = 0;
-for k = 1:length(B)
-    boundary = B{k};
+    for k = 1:length(B)
+        boundary = B{k};
   
-    % Calculate area and perimeter
-    area = polyarea(boundary(:,2), boundary(:,1));
-    perimeter = sum(sqrt(sum(diff(boundary).^2, 2)));
+        % Calculate area and perimeter
+        area = polyarea(boundary(:,2), boundary(:,1));
+        perimeter = sum(sqrt(sum(diff(boundary).^2, 2)));
     
-    % Calculate the bounding box
-    minX = min(boundary(:,2));
-    maxX = max(boundary(:,2));
-    minY = min(boundary(:,1));
-    maxY = max(boundary(:,1));
+        % Calculate the bounding box
+        minX = min(boundary(:,2));
+        maxX = max(boundary(:,2));
+        minY = min(boundary(:,1));
+        maxY = max(boundary(:,1));
     
   
     
-    width = maxX - minX;
-    height = maxY - minY;
+        width = maxX - minX;
+        height = maxY - minY;
     
-    % Calculate aspect ratio
-    tempArea = minArea;
-    fprintf('Mean poss %f', mean(boundary(:,1)));
-    if nargin == 4  % Check if the 'mode' argument is missing
-       if mean(boundary(:,1))< Yheight
-           tempArea  = minArea / 3;
-       end;
-    end
+        % Calculate aspect ratio
+        tempArea = minArea;
+        if nargin == 4  % Check if the 'mode' argument is missing
+          if mean(boundary(:,1))< Yheight
+            tempArea  = minArea / 3;
+          end;
+        end
     
         aspectRatio = height / width;  % or width / height depending on your preference
         if perimeter>0
@@ -42,10 +41,9 @@ for k = 1:length(B)
                     text(centroidX, centroidY, label, 'Color', color, 'FontSize', 20, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
                     continue;
                 end
-            end
-        
+            end     
         end
-end
+    end
 
 output = squareCount;
 
