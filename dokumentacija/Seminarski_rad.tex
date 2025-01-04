@@ -81,7 +81,7 @@
 
 \section{Ideja projekta}
 Segmentacija slike predstavlja jedan od osnovnih problema u obradi slike. 
-Zadatak našeg projekta je kreirati algoritam koji će segmentirati, a zatim i prebrojati crvene i zelene kvadate na slici.
+Zadatak našeg projekta je kreirati algoritam koji će segmentirati, a zatim i prebrojati crvene i zelene kvadrate na slici.
 Započinjemo sa slikom studenata u amfiteatru koji drže crvene i zelene kartone.
 \begin{figure}[h]
     \centering
@@ -95,7 +95,7 @@ Započinjemo sa slikom studenata u amfiteatru koji drže crvene i zelene kartone
 \texttt{Imread} funkcija učitava sliku iz file-a koji je specificiran pomoću njegovog imena, utvrđujući format  na osnovu sadržaja istog. 
 \texttt{img} je varijabla u kojoj se čuva učitana slika. 
 Nakon što je slika učitana, sadržaj slike (u formi matrice piksela) biće sačuvan u varijabli. Ova funkcija je dio biblioteke koju koristi MatLab.\\
-\subsection{Određivanje pragova poje}
+\subsection{Određivanje pragova boje}
 \lstinputlisting[language=matlab, style=mystyle, linerange={5}]{../brojanje_kvadrata_ciz.m}
 
 Koristeći funkciju \texttt{rgb2hsv} slika se konvertuje iz RBG color prostora u HSV (Hue, Saturatiom, Value) color prostor. 
@@ -103,7 +103,7 @@ Dok RGB prostor koristi tri komponente (crvenu, zelenu i plavu) za reprezentacij
 \begin{itemize}
     \item Hue (nijansa),
     \item Saturation (intenzitet boje),
-    \item Value(osvijetljenost boje).
+    \item Value (osvijetljenost boje).
 \end{itemize}
 
 Dakle, img je ulazna slika u RGB formatu, koja je pritome učitana pomoću \texttt {imread} funkcije, a \texttt{hsvImg} je promjenjljiva u kojoj će biti sačuvana slika u HSV formatu. \\
@@ -112,9 +112,9 @@ Dakle, img je ulazna slika u RGB formatu, koja je pritome učitana pomoću \text
 
 U opštem slučaju se u ovaj format koristi zbog svojih prednosti u obradi same slike. 
 Naime, ovaj format pruža lakšu manipulaciju bojama. 
-Naprimjer, H komponenta je nezavisna od svjetlosti i zasićenosti, pa je koristeći navedeni format lakše izolavati određene boje na slici, sto će kasnije biti primjenjeno, nego isključivo koristeći RGB format. 
+Naprimjer, H komponenta je nezavisna od svjetlosti i zasićenosti, pa je koristeći navedeni format lakše izolavati određene boje na slici, što će kasnije biti primjenjeno, nego isključivo koristeći RGB format. 
 U implementaciji koda je upravo bio zadatak pronaći piksele crvene i zelene boje na datim slikama. 
-Međutim, u prvobvitnom prostoru, taj zadatak bi bio znatno otežan jer bi bilo potrebno razmatrati sve tri komponente, a u ovom slučaju smo posmatrali samo H komponentu za filtriranje crvenih tonova, kao i zelenih. 
+Međutim, u prvobitnom prostoru, taj zadatak bi bio znatno otežan jer bi bilo potrebno razmatrati sve tri komponente, a u ovom slučaju smo posmatrali samo H komponentu za filtriranje crvenih tonova, kao i zelenih. 
 Preostale dvije mogu biti korištene za kontrolu jačine boje i osvjetljenosti. 
 
 \lstinputlisting[language=matlab, style=mystyle, linerange={8-11}]{../brojanje_kvadrata_ciz.m}
@@ -123,8 +123,8 @@ Ove linije koda definišu pragove za filtriranje crvene boje u HSV color prostor
 Konkretno, koristi se Hue (H), Saturation (S) i Value (V) komponente za postavljanje opsega boje crvene(a kasnije i zelene), tako da se mogu prepoznati pikseli koji odgovaraju toj boji u slici.
 
 Zašto se koristi ovaj pristup?
-Ovaj pristup koristi dva opsega vrednosti za Hue (H), jer crvena boja u HSV prostoru nije predstavljena sa samo jednim opsegom. 
-U HSV prostoru, crvena boja se prostire kroz početni i krajnji dio opsega Hue vrednosti:
+Ovaj pristup koristi dva opsega vrijednosti za Hue (H), jer crvena boja u HSV prostoru nije predstavljena sa samo jednim opsegom. 
+U HSV prostoru, crvena boja se prostire kroz početni i krajnji dio opsega Hue vrijednosti:
 
 \begin{itemize}
     \item Prvi opseg (\texttt{lowerRed1} i \texttt{upperRed1}) pokriva crvenu boju koja je bliža početku opsega (oko 0, što je početak crvene).
@@ -139,7 +139,7 @@ Sličan pristup je korišten i za zelenu boju ali samo sa jednim opsegom pošto 
 Generalno, maska se koristi za segmentaciju ili izdvavanje određenih dijelova date slike pomoću nekih kriterijuma.
 Koristeći ovaj koncept željeni dijelovi slike se izdvoje, dok ostali bivaju zanemareni. \\
 
-Maska je zapravo binarna slika, što dalje znači da se sastoji isključivo od 1 i 0 te ona označava koji dijelovi slike trebaju biti podvrgnuti željenoj analzi, obradi ili promjeni u opštem slučaju. 
+Maska je zapravo binarna slika, što dalje znači da se sastoji isključivo od 1 i 0 te ona označava koji dijelovi slike trebaju biti podvrgnuti željenoj analizi, obradi ili promjeni u opštem slučaju. 
 Naime, vrijednost 1 označava da je odgovarajući piksel od interesa, dok se onaj sa 0 zanemaruje. 
 Ovaj koncept je implementiran na datom kodu za pronalaženje samo crvenih i/ili zelenih piksela na slikama. \\
 
@@ -246,7 +246,7 @@ Ako je bar jedan od susjednih piksela 1, centralni piksel postaje 1.
 Dakle, objekat se "proširuje" tako da susjedni pikseli postaju dio objekta. 
 \\
 Dilatacija i erozija se često koriste zajedno. Na primjer, primjena dilatacije može učiniti objekat većim, dok erozija može ukloniti nepotrebne dijelove objekta.
- Ove operacije zajedno čine osnovu mnogih "otvoreno" i "zatvoreno" morfoloških operacija. \\
+ Ove operacije zajedno čine osnovu mnogih \texttt{otvoreno} i \texttt{zatvoreno} morfoloških operacija. \\
 
 \textbf{Otvaranje} je definisano kao morfološka operacija erozije praćena sa dilatacijom sa istim strukturnim elementom. 
 Erozija uklanja neke piksela objekta sa ivica regiona objekta, dok dilatacija dodajepiksele objekta. Tako veličina objekta ostaje ista, ali su njegove konture zaglađenije. \\
@@ -291,9 +291,9 @@ Ovaj niz operacija omogućava precizno filtriranje i obradu binarnih slika, sa c
 \end{figure}
 
 
-\subsection{bwbundary}
+\subsection{bwboundary}
 
-\texttt{bwboundary} predstavlja alat iz IPT-a korištenu za pronalazak granica povezanih regiona na binarnoj slici.
+\texttt{bwboundary} predstavlja alat iz IPT-a korišten za pronalazak granica povezanih regiona na binarnoj slici.
 Ova komanda ima mogućnost traženja vanjskih i unutrašnjih granica kao i granica \textit {child} i  \textit{parent} objekata na slici.
 
 \begin{figure}[htbp]
