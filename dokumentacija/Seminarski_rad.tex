@@ -82,6 +82,7 @@
 \section{Ideja projekta}
 Segmentacija slike predstavlja jedan od osnovnih problema u obradi slike. 
 Zadatak našeg projekta je kreirati algoritam koji će segmentirati, a zatim i prebrojati crvene i zelene kvadate na slici.
+Započinjemo sa slikom studenata u amfiteatru koji drže crvene i zelene kartone.
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{../img/studenti.jpg}
@@ -92,21 +93,20 @@ Zadatak našeg projekta je kreirati algoritam koji će segmentirati, a zatim i p
 \section{Realizacija projekta}
 \lstinputlisting[language=matlab, style=mystyle, linerange={2}]{../brojanje_kvadrata_ciz.m}
 \texttt{Imread} funkcija učitava sliku iz file-a koji je specificiran pomoću njegovog imena, utvrđujući format  na osnovu sadržaja istog. 
-Ako je ime file-a file sa više slika, funkcija imread učitava prvu sliku u tom file-u.
-Dakle, 'img/test1.jpg' je putanja do slike koja se učitava. img je varijabla u kojoj se čuva učitana slika. 
-Nakon što je slika učitana, sadržaj slike (u formi matrice piksela) biće sačuvan u varijabli “img”. Ova funkcija je dio biblioteke koju koristi MatLab.\\
+\texttt{img} je varijabla u kojoj se čuva učitana slika. 
+Nakon što je slika učitana, sadržaj slike (u formi matrice piksela) biće sačuvan u varijabli. Ova funkcija je dio biblioteke koju koristi MatLab.\\
 \subsection{Određivanje pragova poje}
 \lstinputlisting[language=matlab, style=mystyle, linerange={5}]{../brojanje_kvadrata_ciz.m}
 
 Koristeći funkciju \texttt{rgb2hsv} slika se konvertuje iz RBG color prostora u HSV (Hue, Saturatiom, Value) color prostor. 
 Dok RGB prostor koristi tri komponente (crvenu, zelenu i plavu) za reprezentaciju boja, HSV prostor koristi tri komponente:\\
 \begin{itemize}
-    \item Hue (boja slika kao crvena, plava),
+    \item Hue (nijansa),
     \item Saturation (intenzitet boje),
     \item Value(osvijetljenost boje).
 \end{itemize}
 
-Dakle, img je ulazna slika u RGB formatu, koja je pritome učitana pomoću \texttt {imread} funkcije, a “hsvImg” je promjenjljiva u kojoj će biti sačuvana slika u HSV formatu. \\
+Dakle, img je ulazna slika u RGB formatu, koja je pritome učitana pomoću \texttt {imread} funkcije, a \texttt{hsvImg} je promjenjljiva u kojoj će biti sačuvana slika u HSV formatu. \\
 
 \indent Zašto je primjenjena ova konverzija, iz jednog color prostora u drugi, na ovom primjeru?\\
 
@@ -130,7 +130,7 @@ U HSV prostoru, crvena boja se prostire kroz početni i krajnji dio opsega Hue v
     \item Prvi opseg (\texttt{lowerRed1} i \texttt{upperRed1}) pokriva crvenu boju koja je bliža početku opsega (oko 0, što je početak crvene).
     \item Drugi opseg (\texttt{lowerRed2} i \texttt{upperRed2}) pokriva crvenu boju koja je bliža kraju opsega (oko 1, što je kraj crvene boje).
 \end{itemize}
-Ovaj pristup omogućava preciznije prepoznavanje crvene boje u cijeloj paleti, jer se crvena boja širi kroz ceo opseg Hue vrednosti u HSV prostoru. 
+Ovaj pristup omogućava preciznije prepoznavanje crvene boje u cijeloj paleti. 
 Sličan pristup je korišten i za zelenu boju ali samo sa jednim opsegom pošto se zelena boja ne nalzi na krajevima HSV prostora.
 
 
@@ -157,7 +157,7 @@ Ovaj uslov osigurava da boja piksela bude u opsegu za crvenu boju.\\
 
 \texttt{hsvImg(:,:,3) >= lowerRed1(3) \& hsvImg(:,:,3) <= upperRed1(3)} provjerava Value, tj. svjetlost boje, da li je unutar željenog opsega. \\
 
-Ovaj uslov znači da će maska “mask1” biti true (1) za piksele koji imaju crvenu boju u određenom opsegu, prema vrijednostima iz lowerRed1 i upperRed1.\\
+Ovaj uslov znači da će maska \texttt{mask1} biti true (1) za piksele koji imaju crvenu boju u određenom opsegu, prema vrijednostima iz lowerRed1 i upperRed1.\\
 
 \texttt{Mask2} ima isti oblik, ali koristi druge granice (\texttt{lowerRed2 i upperRed2}), što omogućava da se prepoznaju i druge nijanse crvene boje (na primjer, svjetlija crvena).\\
 
@@ -180,7 +180,7 @@ Nakon ovih linija maske imaju sljedeći izgled:
 Vidimo da su sa početne slike izdvojena svi regioni gdje se pojavljuju naši kvadrati.
 
 \subsection{Morfološke operacije}
-\lstinputlisting[language=matlab, style=mystyle, linerange={40-43}]{../brojanje_kvadrata_ciz.m}
+\lstinputlisting[language=matlab, style=mystyle, linerange={39-42}]{../brojanje_kvadrata_ciz.m}
 
 U obradi slike, matematička morfologija je korištena kao sredstvo za identificiranje i ekstrakciju značajnih deskriptora slike na osnovu osobina oblika unutar slike. \\
 
@@ -206,7 +206,7 @@ Ovaj tip povezanosti primjenjuje se kada je potrebno razmatrati samo vertikalne 
 Za 4-povezanost, N4, koristi se city-block ili Manhattan distanca.
 8-povezanost se temelji na širem okruženju, gdje su povezani pikseli koji se nalaze u neposrednom susjedstvu, uključujući vertikalne, horizontalne, i dijagonalne susjede. Dakle, osim vertikalnih i horizontalnih piksela, uključeni su i dijagonalni susjedi.\\
 
-Pikseli \textit{ (i, j)} su povezani ako postoji neki piksel u njegovom neposrednom okruženju, koji je u istoj boji, a taj piksel se nalazi u jednoj od sledećih pozicija:
+Pikseli \textbf{ (i, j)} su povezani ako postoji neki piksel u njegovom neposrednom okruženju, koji je u istoj boji, a taj piksel se nalazi u jednoj od sledećih pozicija:
 \begin{itemize}
 \item (i-1, j) — gornji susjed
 \item (i+1, j) — donji susjed
@@ -229,13 +229,13 @@ Sljedeći bitan pojam, koji služi objašnjavanju gornjih operacije, jeste struk
  \textbf{Strukturni elementi (SE) }su osnovni alati u morfološkoj obradi slike.
 Oni su matrice sa fiksnim oblikom koje se koriste za primjenu različitih morfoloških operacija na binarnim ili grayscale slikama. 
 Strukturni element definiše oblik i veličinu regiona u okolini svakog piksela slike, koji se koristi za manipulaciju tim pikselima tokom morfoloških operacija. 
-SE mogu imati različite oblike kao što su kružni, kvadratni, pravougaoni, dok njihova veličina zavisi direktno od njihove aplikacije u samom kodu. 
+SE mogu imati različite oblike kao što su kružni, kvadratni, pravougaoni, dok njihova veličina zavisi direktno od njihove aplikacije u samom kodu. \\ \\
 Navedeni pojmovi su ključni pri pristupu eroziji i dilataciji. \\
 
 Najprije, \textbf{erozija} se koristi za smanjenje objekata na slici. Ova operacija omogućava uklanjanje manjih struktura i detalja u slici, kao i smanjenje veličine objekata u binarnoj slici.
 Erozija je vrlo korisna u segmentaciji, uklanjanju šuma i prepoznavanju oblika. 
 Erozija funkcioniše tako što, za svaki piksel u slici, gleda sve njegove susjedne piksele. 
-Ako svi susjedni pikseli koji čine oblik strukturnog elementa imaju vrijednost 1 (odnosno pripadaju objektu), onda centralni piksel ostaje 1. Ako neki od susjednih piksela nije 1, centralni piksel se postavlja na 0, što znači da se objekat smanjuje.
+Ako svi susjedni pikseli koji čine oblik strukturnog elementa imaju vrijednost 1 (odnosno pripadaju objektu), onda centralni piksel ostaje 1. Ako neki od susjednih piksela nije 1, centralni piksel se postavlja na 0, što znači da se objekat smanjuje.\\
 
 S druge strane, \textbf{dilatacija} se koristi za proširivanje objekata na slici. 
 Ova operacija omogućava povećanje veličine objekata u binarnoj slici i povezivanje objekata koji su blizu jedan drugog. 
@@ -252,7 +252,7 @@ Dilatacija i erozija se često koriste zajedno. Na primjer, primjena dilatacije 
 Erozija uklanja neke piksela objekta sa ivica regiona objekta, dok dilatacija dodajepiksele objekta. Tako veličina objekta ostaje ista, ali su njegove konture zaglađenije. \\
 
 \textbf{Zatvaranje} je morfološka operacija koja se sastoji od dilatacije praćene erozijom sa istim strukturnim elementom. 
-Zatvaranje zaglađuje konture objekata, ali i popunjava uske prekide ili praznine i eliminiše male šupljine, mijenjajući te male regione pozadine u regione objekta.
+Zatvaranje zaglađuje konture objekata, ali i popunjava uske prekide ili praznine i eliminiše male šupljine, mijenjajući te male regione pozadine u regione objekta.\\
 
 Gore navedeni kod koristi nekoliko morfoloških operacija za obradu slike u kojoj je detektovana crvena boja, pri čemu je isti pristup urađen i za zelenu boju. 
 Morfološke operacije koriste strukturne elemente za manipulaciju oblikom objekata u slici. 
@@ -263,14 +263,14 @@ U ovom slučaju, strukturni element je disk, što znači da se koristi diskasti 
 \\
 
 Ovdje se primenjuje erozija na \texttt{redMask} koristeći \textbf{diskasti strukturni element} sa poluprečnikom od 3 piksela. 
-Ovaj diskasti strukturni element je matrica koja sadrži vrijednosti 1 u obliku diska (poluprečnik 3) i 0 izvan tog diska. 
+Ovaj diskasti strukturni element je matrica koja sadrži vrijednosti 1 u obliku diska (poluprečnik 3). 
 Erozija će ukloniti piksele sa ivica objekta. 
 Zbog ove operacije, objekti u redMask postaju manji, a sitni objekti mogu biti uklonjeni. Ova operacija se radi dva puta uzastopno.\\
 
 
 \texttt{redMask = imopen(redMask, strel('disk', 10));}\\
 
-U ovoj liniji je primjenjena otvorena operacija. Prvo se smanjuju objekti pomoću erozije, a zatim se proširuju pomoću dilatacije.  
+U ovoj liniji je primjenjena operacija otvaranja. Prvo se smanjuju objekti pomoću erozije, a zatim se proširuju pomoću dilatacije.  
 Ovaj postupak služi za uklanjanje sitnih objekata i šupljina u većim objektima, dok istovremeno zadržava osnovnu strukturu objekata. 
 Zbog erozije, manji objekti nestaju, dok dilatacija omogućava da preostali objekti ponovo postanu "veći" i sačuvaju osnovni oblik.\\
 
@@ -291,20 +291,75 @@ Ovaj niz operacija omogućava precizno filtriranje i obradu binarnih slika, sa c
 \end{figure}
 
 
-\subsection{Boundary}
+\subsection{bwbundary}
 
+\texttt{bwboundary} predstavlja alat iz IPT-a korištenu za pronalazak granica povezanih regiona na binarnoj slici.
+Ova komanda ima mogućnost traženja vanjskih i unutrašnjih granica kao i granica \textit {child} i  \textit{parent} objekata na slici.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.49\textwidth]{bwboundaries.png}
+    \caption{Tipovi granica objekata na slici}
+    \label{fig:redMaskgreenMask}
+\end{figure}
 
 \lstinputlisting[language=matlab, style=mystyle, linerange={55-56}]{../brojanje_kvadrata_ciz.m}
+Ova funkcija prima binarnu sliku na kojoj je potrebno pronaći granice (to je u našem slučaju maska) i kao rezultat vraća matricu određenih granica. 
+Pošto je u našem slučaju potrebno pronaći samo vanjske granice koristimo parametar "noholes"  koji traži samo zajedničke vanjske granice \textit{parent} i \textit{child} objekata.
+Funkcija bwboundaries implementira Moore-susjedni algoritam. Funkciju je moguće pozvati da koristi 4 ili 8 povezanost susjednih pixela s time da je default argument 4-povezanost.
+\\
+Funkcija je pozvana posebno za crvenu i posebno za zelenu masku.
+
+Sada kada imamo matricu naših granica moguće je sekvencijalno proći kroz nju i odrediti koje granice odgovaraju obliku traženog kvadrata.
 
 \subsection{Funkcija brojanje}
 
-Poziv funkcije:
 
-\lstinputlisting[language=matlab, style=mystyle, linerange={73-74}]{../brojanje_kvadrata_ciz.m}
 
-Funkcija:
+Pošto imamo dvije matrice granica iz kojih je potrebno izvući kvadrate odlučili smo se sljedeći algoritam smjestiti u našu funkciju pod nazivom \texttt{Funkcija\_brojanje} koja prima matricu granica,  boju kvadrata i posebnu funkciju.
+Za ovaj pristup odlučili smo se iz sljedećeg razloga.\\
+Pošto radimo nad slikom studenata u amfiteatru, veličina kvadrata na slici koji drži student u prvom redu će biti manja od kvadrata koji drži student u posljednjem redu amfiteatra. 
+Iz ovog razloga odredili smo funkciju prema kojoj se na osnovu površine kvadrata može odrediti njegova relativna visina na slici. To znači da kada znamo površinu granice možemo izračunati njenu predviđenu visinu na slici i uporediti je sa stvarnom visinom na kojoj se objekat nalazi. 
+Ako postoji značajno odstupanje to znači da naša granica ne odgovara kvadratu.
+\\
 
-\lstinputlisting[language=matlab, style=mystyle]{../Funkcija_brojanje.m}
+Funkcija koja odgovara multimedijalnoj sali našeg fakulteta:
+\lstinputlisting[language=matlab, style=mystyle, linerange={66}]{../brojanje_kvadrata_ciz.m}
+
+Ovu funkciju smo kreirali na osnovu slika napravljenih u multimedijalnoj sali. Za svaki amfiteatar bilo bi potrebno odrediti funkciju koja ga opisuje (Zavisi od nagiba, visine klupa i sl.).
+\\
+Definicija funkcije:
+\lstinputlisting[language=matlab, style=mystyle, linerange={1-9}]{../Funkcija_brojanje.m}
+
+Kao što smo rekli, u funkciji prolazimo sekvencijalno kroz svaku granicu iz \texttt{B} matrice. Za svaku granicu računamo površinu i njen obim.
+
+\lstinputlisting[language=matlab, style=mystyle, linerange={9-18}]{../Funkcija_brojanje.m}
+
+Zatim računamo visinu. Iz ovih podataka ćemo odrediti odnos visine i širine. Kvadrati koje koristimo imaju odnos 4/5.\\	
+\newpage
+U sljedećim ugnježdenim \texttt{if} izrazima određujemo naše kvadrate.\\
+\lstinputlisting[language=matlab, style=mystyle, linerange={22-36}]{../Funkcija_brojanje.m}
+
+U prvom se pitamo da li je obim veći od  0.
+Zatim se pitamo da li je odnos visine i širine u granicama. Na ovaj način smo isključili sve visoke i uske kao i široke i niske oblike.
+Zadnji \texttt{if} provjerava da li visina odgovara izračunatoj visini.\\
+
+Ukoliko je sve od navedenog ispravno, inkrementiramo brojač i postavljamo \texttt{label} sa brojem na mjesto našeg kvadrata.
+\\
+
+Na samom kraju funkcije vraćamo broj kvadrata.
+\lstinputlisting[language=matlab, style=mystyle, linerange={39}]{../Funkcija_brojanje.m}
+
+
+\subsection{Poziv funkcije i ispis}
+
+Iz glavnog programa vršimo poziv funkcije:
+\lstinputlisting[language=matlab, style=mystyle, linerange={67-68}]{../brojanje_kvadrata_ciz.m}
+
+Nakon ovih linije broj crvenih i zelenih kvadrata sačuvan je odgovarajuće varijable.
+Preostaje samo ispisati broj na ekran i opisati linije u boji oko svih granica.\\
+
+\lstinputlisting[language=matlab, style=mystyle, linerange={70-83}]{../brojanje_kvadrata_ciz.m}
 \newpage
 Rezultat:
 
@@ -314,8 +369,41 @@ Rezultat:
     \caption{8 crvenih 6 zelenih}
     \label{fig:example}
 \end{figure}
+
+Kvadrati su tačno prebrojani, a crveni džemper ispod crvenog kvadrata broj 8. je izbačen po kriterijumu visine.
+
+\newpage
+\section{Primjeri}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{studenti2.png}
+    \caption{4 crvenih 11 zelenih}
+    \label{fig:example}
+\end{figure}
+U ovom primjeru uspješno smo eliminisali boundary crvene jakne ispod zelenog kvadrata br. 5, ali ne i crveni džemper na crvenom kvadratu br. 4.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\textwidth]{kvadrati_test.png}
+    \caption{1 crvenih 1 zelenih}
+    \label{fig:example}
+\end{figure}
+\newpage
 \section{Zaključak:}
+U okviru ovog seminarskog rada uspješno smo implementirali program za brojanje crvenih i zelenih kvadrata na slici korištenjem MATLAB-a. Program je razvijen primjenom tehnika obrade slike, uključujući segmentaciju boja i analizu objekata, što je omogućilo precizno prepoznavanje i brojanje kvadrata različitih boja.
+\\
+
+Rezultati pokazuju da program postiže visoku tačnost u identifikaciji i klasifikaciji kvadrata.
+\\
+
+Iako su rezultati zadovoljavajući, u budućem radu postoji prostor za dodatna poboljšanja.
+
 \newpage
 \section{Izvori:}
+
+\begin{enumerate}
+	\item https://www.mathworks.com/help/matlab
+	\item https://www.mathworks.com/help/matlab/ref/boundary
+\end{enumerate}
 
 \end{document}

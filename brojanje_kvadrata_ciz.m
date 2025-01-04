@@ -1,19 +1,19 @@
-    % Read the image
+    % Citanje slike
     img = imread('img/studenti.jpg');
     
-    % Convert the image to HSV color space
+    % Prebacivanje u HSV prostor
     hsvImg = rgb2hsv(img);
-    % Define thresholds for red color in HSV
-    % Adjust these values based on the specific shade of red
-    lowerRed1 = [0, 0.2, 0.2]; % Lower threshold for red
-    upperRed1 = [7/360, 1, 1];  % Upper threshold for red
-    lowerRed2 = [353/360, 0.2, 0.2]; % Lower threshold for red
-    upperRed2 = [1, 1, 1];      % Upper threshold for red
-    
-    lowerGreen = [70/360, 0.3, 0.3]; % Lower threshold for red
-    upperGreen = [180/360, 1, 1];  % Upper threshold for red
+    % Odredjivanje granicnih vrijednosti
 
-    % Create masks for red and green colors
+    lowerRed1 = [0, 0.3, 0.3]; % Donja granica za crvenu
+    upperRed1 = [7/360, 1, 1];  % Gornja granica za crvenu
+    lowerRed2 = [353/360, 0.3, 0.3]; % Donja granica za crvenu
+    upperRed2 = [1, 1, 1];      % Gornja granica za crvenu
+    
+    lowerGreen = [70/360, 0.3, 0.3]; % Donja granica za zelenu
+    upperGreen = [180/360, 1, 1];  % Gornja granica za zelenu
+
+    % Kreiranje maske
     mask1 = (hsvImg(:,:,1) >= lowerRed1(1) & hsvImg(:,:,1) <= upperRed1(1) & ...
               hsvImg(:,:,2) >= lowerRed1(2) & hsvImg(:,:,2) <= upperRed1(2) & ...
               hsvImg(:,:,3) >= lowerRed1(3) & hsvImg(:,:,3) <= upperRed1(3));
@@ -33,7 +33,7 @@
   
     
   
-  % Perform morphological operations to clean up the mask
+  % Morfoloske operacije nad maskom
   
 
      redMask = imerode(redMask, strel('disk', 3));
@@ -49,43 +49,29 @@
  
 
     
-    % Find contours of the red areas
+    % Trazenje kontura
     
     
-    [Br, Lr] = bwboundaries(redMask, 'noholes');
-    [Bg, Lg] = bwboundaries(greenMask, 'noholes');
+    Br = bwboundaries(redMask, 'noholes');
+    Bg = bwboundaries(greenMask, 'noholes');
      
    
 
-    xlabel('MASK 1');
-    minAreaThreshold = 3000; % Define your minimum area threshold here (adjust as necessary)
-    
-    hold on
-    
-    lineHeight = size(img, 1) * 3 / 5;
-    line([1, size(img, 2)], [lineHeight, lineHeight], 'Color', 'r', 'LineWidth', 2);
-    
-    hold off
-    
+
     subplot(1,1,1)
-    imshow(redMask | greenMask,  'InitialMagnification', 40);
+    imshow(img,  'InitialMagnification', 40);
 
-    RsquareCount = Funkcija_brojanje(Br,minAreaThreshold,'red',lineHeight);
-    GsquareCount = Funkcija_brojanje(Bg,minAreaThreshold,'green',lineHeight);
-
-
-
+ 
+    % Funkcija
+    f = @(x) 0.03*x+600 + 20;
+    RsquareCount = Funkcija_brojanje(Br,'red',f);
+    GsquareCount = Funkcija_brojanje(Bg,'green',f);
     
-    % Display the result
     fprintf('\nNumber of red squares: %d\n', RsquareCount);
     fprintf('\nNumber of red squares: %d\n', GsquareCount);
-    
-    % Optionally, display the image with detected squares
-    
-    xlabel(sprintf('Broj crvenih: %d\nBroj zelenih: %d', RsquareCount, GsquareCount), 'FontSize', 40);
+    xlabel(sprintf('Broj crvenih: %d  Broj zelenih: %d', RsquareCount, GsquareCount), 'FontSize', 40);
     hold on;
-
-    
+   
 for i = 1:length(Br)
     boundary = Br{i};
     plot(boundary(:,2), boundary(:,1), 'Color', 'blue', 'LineWidth', 2);
@@ -95,6 +81,4 @@ for i = 1:length(Bg)
     boundary = Bg{i};
     plot(boundary(:,2), boundary(:,1), 'Color', 'yellow', 'LineWidth', 2);
 end
-
-
     hold off;
