@@ -7,7 +7,7 @@
 \usepackage{pgfplots} % For plotting graphs
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
-\usepackage[croatian, provide=*]{babel}
+\usepackage[serbian]{babel}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -60,7 +60,7 @@
 \noindent\rule[7pt]{\linewidth}{0.4pt}
 
 
-  \includegraphics[width=0.7\linewidth]{fet_logo.png}
+  \includegraphics[width=0.7\linewidth]{img/fet_logo.png}
 \vspace{3cm}\\
 {\fontsize{34pt}{28pt}\selectfont SEMINARSKI RAD}\\
 \large{OBARADA I ANALIZA MEDICINSKIH SLIKA}\\
@@ -69,18 +69,25 @@
 \Huge{Prepoznavanje kvadrata na slici}\\
 \vspace{0.5cm}
 \large{Ismar Osmanović / Lejla Zahirović}
+\end{center}
+
 \vfill
+\noindent\hfill
+\begin{minipage}[t]{0.33\textwidth}
+ Profesor:\\
+dr.sc. Amira Šerifović-Trbalić
+\end{minipage}
+\\
 
 \noindent\rule[7pt]{\linewidth}{0.4pt}
-\end{center}
+
 \newpage
 \thispagestyle{empty}
 \tableofcontents
 \newpage
 \pagenumbering{arabic} 
-
 \section{Ideja projekta}
-Segmentacija slike predstavlja jedan od osnovnih problema u obradi slike. 
+Segmentacija slike predstavlja jedan od osnovnih problema u obradi slike.
 Zadatak našeg projekta je kreirati algoritam koji će segmentirati, a zatim i prebrojati crvene i zelene kvadrate na slici.
 Započinjemo sa slikom studenata u amfiteatru koji drže crvene i zelene kartone.
 \begin{figure}[h]
@@ -92,13 +99,13 @@ Započinjemo sa slikom studenata u amfiteatru koji drže crvene i zelene kartone
 \newpage
 \section{Realizacija projekta}
 \lstinputlisting[language=matlab, style=mystyle, linerange={2}]{../brojanje_kvadrata_ciz.m}
-\texttt{Imread} funkcija učitava sliku iz file-a koji je specificiran pomoću njegovog imena, utvrđujući format  na osnovu sadržaja istog. 
+\texttt{imread} funkcija učitava sliku iz file-a koji je specificiran pomoću njegovog imena, utvrđujući format  na osnovu sadržaja istog. 
 \texttt{img} je varijabla u kojoj se čuva učitana slika. 
 Nakon što je slika učitana, sadržaj slike (u formi matrice piksela) biće sačuvan u varijabli. Ova funkcija je dio biblioteke koju koristi MatLab.\\
 \subsection{Određivanje pragova boje}
 \lstinputlisting[language=matlab, style=mystyle, linerange={5}]{../brojanje_kvadrata_ciz.m}
 
-Koristeći funkciju \texttt{rgb2hsv} slika se konvertuje iz RBG color prostora u HSV (Hue, Saturatiom, Value) color prostor. 
+Koristeći funkciju \texttt{rgb2hsv} slika se konvertuje iz RBG color prostora u HSV (Hue, Saturation, Value) color prostor. 
 Dok RGB prostor koristi tri komponente (crvenu, zelenu i plavu) za reprezentaciju boja, HSV prostor koristi tri komponente:\\
 \begin{itemize}
     \item Hue (nijansa),
@@ -120,7 +127,7 @@ Preostale dvije mogu biti korištene za kontrolu jačine boje i osvjetljenosti.
 \lstinputlisting[language=matlab, style=mystyle, linerange={8-11}]{../brojanje_kvadrata_ciz.m}
 
 Ove linije koda definišu pragove za filtriranje crvene boje u HSV color prostoru. 
-Konkretno, koristi se Hue (H), Saturation (S) i Value (V) komponente za postavljanje opsega boje crvene(a kasnije i zelene), tako da se mogu prepoznati pikseli koji odgovaraju toj boji u slici.
+Konkretno, koristi se Hue (H), Saturation (S) i Value (V) komponente za postavljanje opsega boje crvene(a kasnije i zelene), tako da se mogu prepoznati pikseli koji odgovaraju toj boji na slici.
 
 Zašto se koristi ovaj pristup?
 Ovaj pristup koristi dva opsega vrijednosti za Hue (H), jer crvena boja u HSV prostoru nije predstavljena sa samo jednim opsegom. 
@@ -144,7 +151,7 @@ Naime, vrijednost 1 označava da je odgovarajući piksel od interesa, dok se ona
 Ovaj koncept je implementiran na datom kodu za pronalaženje samo crvenih i/ili zelenih piksela na slikama. \\
 
 Dalje se na njima mogu primjeniti filteri ili operacije. 
-Dakle, maska predstavlja jedan od ključnih alata u obradi i analizi slike te se koristi upravo za: izolaciju određenih dijelova slike, filtriranje, segmentaciju objekta, obrada na temelju boje ili intenziteta, praćenje objekta, kao i pobošljanje preformansi (u raddu sa velikim slikama ili skupovima podataka).\\
+Dakle, maska predstavlja jedan od ključnih alata u obradi i analizi slike te se koristi upravo za: izolaciju određenih dijelova slike, filtriranje, segmentaciju objekta, obrada na temelju boje ili intenziteta, praćenje objekta, kao i pobošljanje preformansi (u radu sa velikim slikama ili skupovima podataka).\\
 
 \lstinputlisting[language=matlab, style=mystyle, linerange={16-30}]{../brojanje_kvadrata_ciz.m}
 
@@ -166,13 +173,14 @@ Ovaj uslov znači da će maska \texttt{mask1} biti true (1) za piksele koji imaj
 Ova linija koristi logički operator | (ili) kako bi spojila dvije maske. Znači da će \texttt{redMask} biti true (1) na mjestima gdje je barem jedan od uslova zadovoljen, tj. ili piksela u maski 1 ili piksela u maski 2. \\
 
 \noindent Analogan pristup se koristi i za \texttt{greenMask}.
+\\
 
 Nakon ovih linija maske imaju sljedeći izgled:
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{redmask.jpg}
+    \includegraphics[width=0.45\textwidth]{img/redmask.jpg}
     \hfill
-    \includegraphics[width=0.45\textwidth]{greenmask.jpg} 
+    \includegraphics[width=0.45\textwidth]{img/greenmask.jpg} 
     \caption{a) redMask b) greenMask}
     \label{fig:redMaskgreenMask}
 \end{figure}
@@ -283,9 +291,9 @@ Ovaj niz operacija omogućava precizno filtriranje i obradu binarnih slika, sa c
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.49\textwidth]{morphred.jpg}
+    \includegraphics[width=0.49\textwidth]{img/morphred.jpg}
     \hfill
-    \includegraphics[width=0.49\textwidth]{morphgreen.jpg} 
+    \includegraphics[width=0.49\textwidth]{img/morphgreen.jpg} 
     \caption{redMask i greeenMask nakon morfoloških operacija}
     \label{fig:redMaskgreenMask}
 \end{figure}
@@ -298,7 +306,7 @@ Ova komanda ima mogućnost traženja vanjskih i unutrašnjih granica kao i grani
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.49\textwidth]{bwboundaries.png}
+    \includegraphics[width=0.49\textwidth]{img/bwboundaries.png}
     \caption{Tipovi granica objekata na slici}
     \label{fig:redMaskgreenMask}
 \end{figure}
@@ -361,11 +369,11 @@ Preostaje samo ispisati broj na ekran i opisati linije u boji oko svih granica.\
 
 \lstinputlisting[language=matlab, style=mystyle, linerange={70-83}]{../brojanje_kvadrata_ciz.m}
 \newpage
-Rezultat:
+\textbf{Rezultat:}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{studenti.png}
+    \includegraphics[width=\textwidth]{img/studenti.png}
     \caption{8 crvenih 6 zelenih}
     \label{fig:example}
 \end{figure}
@@ -377,27 +385,27 @@ Kvadrati su tačno prebrojani, a crveni džemper ispod crvenog kvadrata broj 8. 
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.6\textwidth]{studenti2.png}
+    \includegraphics[width=0.6\textwidth]{img/studenti2.png}
     \caption{4 crvenih 11 zelenih}
     \label{fig:example}
 \end{figure}
 U ovom primjeru uspješno smo eliminisali boundary crvene jakne ispod zelenog kvadrata br. 5, ali ne i crveni džemper na crvenom kvadratu br. 4.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.4\textwidth]{kvadrati_test.png}
+    \includegraphics[width=0.4\textwidth]{img/kvadrati_test.png}
     \caption{1 crvenih 1 zelenih}
     \label{fig:example}
 \end{figure}
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{kolege_1_crop.png}
+    \includegraphics[width=0.7\textwidth]{img/kolege_1_crop.png}
     \caption{0 crvenih 3 zelena}
     \label{fig:example}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{kolege_2_crop.png}
+    \includegraphics[width=0.7\textwidth]{img/kolege_2_crop.png}
     \caption{1 crveni 2 zelena}
     \label{fig:example}
 \end{figure}
@@ -405,7 +413,7 @@ U ovom primjeru uspješno smo eliminisali boundary crvene jakne ispod zelenog kv
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{kolege_3_crop.png}
+    \includegraphics[width=0.7\textwidth]{img/kolege_3_crop.png}
     \caption{3 crvena 0 zelenih}
     \label{fig:example}
 \end{figure}
@@ -423,6 +431,7 @@ Iako su rezultati zadovoljavajući, u budućem radu postoji prostor za dodatna p
 \section{Izvori:}
 
 \begin{enumerate}
+	\item Predavanja iz predmeta Obrada i analiza medicinskih slika  - dr.sc. Amira Šerifović-Trbalić
 	\item https://www.mathworks.com/help/matlab
 	\item https://www.mathworks.com/help/matlab/ref/boundary
 \end{enumerate}
