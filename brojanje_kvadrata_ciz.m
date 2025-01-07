@@ -1,5 +1,5 @@
     % Citanje slike
-    img = imread('img/studenti.jpg');
+    img = imread('img/kolege_6.jpg');
     
     % Prebacivanje u HSV prostor
     hsvImg = rgb2hsv(img);

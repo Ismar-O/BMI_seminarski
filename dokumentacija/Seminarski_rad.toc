@@ -1,3 +1,12 @@
-\babel@toc {serbian}{}\relax 
+\babel@toc {croatian}{}\relax 
 \contentsline {section}{\numberline {1}Ideja projekta}{1}{}%
-\contentsline {section}{\numberline {2}Realizacija projekta}{1}{}%
+\contentsline {section}{\numberline {2}Realizacija projekta}{2}{}%
+\contentsline {subsection}{\numberline {2.1}Određivanje pragova boje}{2}{}%
+\contentsline {subsection}{\numberline {2.2}Maska}{3}{}%
+\contentsline {subsection}{\numberline {2.3}Morfološke operacije}{4}{}%
+\contentsline {subsection}{\numberline {2.4}bwboundary}{7}{}%
+\contentsline {subsection}{\numberline {2.5}Funkcija brojanje}{8}{}%
+\contentsline {subsection}{\numberline {2.6}Poziv funkcije i ispis}{9}{}%
+\contentsline {section}{\numberline {3}Primjeri}{11}{}%
+\contentsline {section}{\numberline {4}Zaključak:}{13}{}%
+\contentsline {section}{\numberline {5}Izvori:}{14}{}%
